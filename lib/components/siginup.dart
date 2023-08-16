@@ -29,19 +29,20 @@ class _SignupState extends State<Signup> {
   }
 
   signUpUser() async {
-    bool internetConnection = await InternetConnectionChecker().hasConnection;
-    if (this._signUpFormKey.currentState!.validate()) {
-      if (internetConnection) {
-        await userService.signUp(userValues);
-        int? statusCode = userService.statusCode;
-        if (statusCode == 400) {
-          return SnackBar(content: Text("${userService.msg}"));
-        }
-      } else {
-        Navigator.pushReplacementNamed(context, '/');
+    // bool internetConnection = await InternetConnectionChecker().hasConnection;
+    if (_signUpFormKey.currentState!.validate()) {
+      await userService.signUp(userValues);
+      int? statusCode = userService.statusCode;
+      print("========Its working=========");
+      if (statusCode == 400) {
+        print("${userService.msg}");
+        return SnackBar(content: Text("${userService.msg}"));
       }
+      //  else {
+      //   // Navigator.pushReplacementNamed(context, '/');
+      // }
     } else {
-      print("Trying to connect");
+      // print("Trying to connect");
     }
   }
 
@@ -51,10 +52,10 @@ class _SignupState extends State<Signup> {
         labelText: text,
         prefixIcon: setFormIcons(text),
         contentPadding: EdgeInsets.all(customeWidth['fieldPadding']),
-        errorBorder: this.setBorder(1.8, Colors.red),
-        focusedErrorBorder: this.setBorder(1.2, Colors.red),
-        focusedBorder: this.setBorder(2.0, Colors.blue),
-        enabledBorder: this.setBorder(1.0, Colors.white),
+        errorBorder: setBorder(1.8, Colors.red),
+        focusedErrorBorder: setBorder(1.2, Colors.red),
+        focusedBorder: setBorder(2.0, Colors.blue),
+        enabledBorder: setBorder(1.0, Colors.white),
         fillColor: Colors.white,
         filled: true,
         errorStyle: TextStyle(fontSize: sizeConfig.safeBlockHorizontal! * 3));
@@ -122,11 +123,11 @@ class _SignupState extends State<Signup> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-            icon: Icon(Icons.chevron_left),
+            icon: const Icon(Icons.chevron_left),
             onPressed: () {
               Navigator.pop(context, false);
             }),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: Colors.grey[200],
         elevation: 0.0,
       ),
@@ -160,7 +161,7 @@ class _SignupState extends State<Signup> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            decoration: this.customeFormField("Full name"),
+                            decoration: customeFormField("Full name"),
                             onSaved: (String? val) {
                               userValues['fullName'] = val;
                             },
@@ -169,7 +170,7 @@ class _SignupState extends State<Signup> {
                             height: customeWidth['formFieldSpacing'],
                           ),
                           TextFormField(
-                            decoration: this.customeFormField("Mobile number"),
+                            decoration: customeFormField("Mobile number"),
                             keyboardType: TextInputType.phone,
                             onSaved: (String? val) {
                               userValues['mobileNumber'] = val;
@@ -181,7 +182,7 @@ class _SignupState extends State<Signup> {
                             height: customeWidth['formFieldSpacing'],
                           ),
                           TextFormField(
-                            decoration: this.customeFormField("Email"),
+                            decoration: customeFormField("Email"),
                             keyboardType: TextInputType.emailAddress,
                             onSaved: (String? val) {
                               userValues['email'] = val;
@@ -193,7 +194,7 @@ class _SignupState extends State<Signup> {
                             height: customeWidth['formFieldSpacing'],
                           ),
                           TextFormField(
-                            decoration: this.customeFormField("password"),
+                            decoration: customeFormField("password"),
                             obscureText: true,
                             onSaved: (String? val) {
                               userValues['password'] = val;
@@ -204,6 +205,20 @@ class _SignupState extends State<Signup> {
                           SizedBox(
                             height: customeWidth['formFieldSpacing'],
                           ),
+                          Container(
+                            width: 350,
+                            height: 50,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  signUpUser();
+                                },
+                                child: const Text(
+                                  "Sign up",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                          )
                         ],
                       ),
                     )

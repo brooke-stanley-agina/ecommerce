@@ -16,14 +16,14 @@ class UserService {
   }
 
   void initializeFirebaseApp() async {
-    bool internetConnection = await InternetConnectionChecker().hasConnection;
+    // bool internetConnection = await InternetConnectionChecker().hasConnection;
+    await Firebase.initializeApp();
+    _auth = FirebaseAuth.instance;
+    _firestore = FirebaseFirestore.instance;
+    _storage = const FlutterSecureStorage();
+    // if (internetConnection) {
 
-    if (internetConnection) {
-      await Firebase.initializeApp();
-      _auth = FirebaseAuth.instance;
-      _firestore = FirebaseFirestore.instance;
-      _storage = const FlutterSecureStorage();
-    }
+    // }
   }
 
   int? statusCode;
@@ -46,14 +46,14 @@ class UserService {
   }
 
   Future<void> signUp(userValues) async {
-    String email = userValues['emails'];
+    String email = userValues['email'];
     String password = userValues['password'];
 
     await _auth!
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((dynamic user) {
       String uid = user.user.uid;
-      _firestore!.collection("users").add({
+      _firestore?.collection("users").add({
         'fullName': userValues['fullName'],
         'mobileNumber': userValues["mobileNumber"],
         'userId': uid
@@ -66,7 +66,7 @@ class UserService {
   }
 
   Future<void> login(userValues) async {
-    String email = userValues['emails']!;
+    String email = userValues['email']!;
     String password = userValues['password'];
 
     await _auth!
@@ -92,7 +92,7 @@ class UserService {
 
   void logOut(context) async {
     await _storage!.deleteAll();
-    Navigator.pushReplacementNamed(context,'/login');
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   void handleAuthErrors(error) {
@@ -111,7 +111,4 @@ class UserService {
         }
     }
   }
-
-
-  
 }
