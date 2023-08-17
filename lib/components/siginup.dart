@@ -35,8 +35,8 @@ class _SignupState extends State<Signup> {
       int? statusCode = userService.statusCode;
       print("========Its working=========");
       if (statusCode == 400) {
-        print("${userService.msg}");
-        return SnackBar(content: Text("${userService.msg}"));
+        final snackbar = SnackBar(context: Text("${userService.msg}"))
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       //  else {
       //   // Navigator.pushReplacementNamed(context, '/');
